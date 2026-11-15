@@ -184,13 +184,20 @@ export function ContactPage() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
                     <MapPin className="h-4 w-4" aria-hidden="true" />
                   </div>
-                  <div>
+                  <div className="space-y-3">
                     <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
-                      Location
+                      Office Locations
                     </div>
-                    <div className="mt-1 text-base font-semibold text-white">
-                      {SITE_CONFIG.location}
-                    </div>
+                    {SITE_CONFIG.offices.map((office) => (
+                      <div key={office.city}>
+                        <div className="text-xs font-bold tracking-wider text-[#FF4F17] uppercase">
+                          {office.city}
+                        </div>
+                        <div className="mt-0.5 text-base font-semibold text-white">
+                          {office.address}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

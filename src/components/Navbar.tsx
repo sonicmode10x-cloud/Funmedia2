@@ -153,7 +153,7 @@ export function Navbar() {
                 Let&apos;s Talk
               </Link>
               <p className="mt-4 text-center text-xs text-white/60">
-                hello@funmedia.com.np · Nepal
+                hello@funmedia.com.np · Kathmandu &amp; Pokhara, Nepal
               </p>
             </div>
           </motion.div>

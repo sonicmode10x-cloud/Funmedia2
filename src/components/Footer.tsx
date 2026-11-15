@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
 import { NAV_ITEMS, SITE_CONFIG } from '../data/site';
 import { SERVICES } from '../data/services';
 import { INDUSTRIES } from '../data/industries';
@@ -7,7 +7,6 @@ import { INDUSTRIES } from '../data/industries';
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-gradient-to-b from-[#FF5B22] via-[#FF4F17] to-[#E63E0B] text-white">
-      {/* Monumental Oversized 3D-Styled Brand Wordmark across the top of the Footer (exact Finguard signature) */}
       <div className="mx-auto max-w-7xl overflow-hidden px-4 pt-12 sm:px-6 lg:px-8 lg:pt-16">
         <div
           aria-hidden="true"
@@ -109,20 +108,27 @@ export function Footer() {
 
             <div>
               <h3 className="text-xs font-bold tracking-wider text-white uppercase">
-                Contact
+                Locations &amp; Contact
               </h3>
-              <ul className="mt-4 space-y-2.5 text-xs text-white/85">
+              <ul className="mt-4 space-y-3 text-xs text-white/90">
                 <li>
                   <a
                     href={`mailto:${SITE_CONFIG.email}`}
-                    className="break-all transition-colors hover:text-white hover:underline"
+                    className="font-semibold break-all transition-colors hover:text-white hover:underline"
                   >
                     {SITE_CONFIG.email}
                   </a>
                 </li>
-                <li>{SITE_CONFIG.location}</li>
+                {SITE_CONFIG.offices.map((office) => (
+                  <li key={office.city} className="leading-snug">
+                    <span className="block text-[10px] font-bold tracking-wider text-white/75 uppercase">
+                      {office.city} Office
+                    </span>
+                    <span className="font-medium text-white">{office.address}</span>
+                  </li>
+                ))}
                 <li>
-                  <Link to="/contact" className="hover:underline">
+                  <Link to="/contact" className="font-semibold hover:underline">
                     Project Enquiry
                   </Link>
                 </li>
@@ -131,10 +137,32 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Dedicated Office Locations Strip */}
+        <div className="grid gap-4 border-t border-white/20 py-6 sm:grid-cols-2">
+          {SITE_CONFIG.offices.map((office) => (
+            <div
+              key={office.city}
+              className="flex items-center gap-3.5 rounded-2xl bg-black/15 px-5 py-4"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#FF4F17]">
+                <MapPin className="h-4 w-4 stroke-[2.3]" aria-hidden="true" />
+              </span>
+              <div>
+                <div className="text-[11px] font-bold tracking-widest text-white/80 uppercase">
+                  {office.city} Office
+                </div>
+                <div className="font-display text-sm font-bold text-white sm:text-base">
+                  {office.address}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Bottom Copyright Bar */}
         <div className="flex flex-col items-start justify-between gap-4 border-t border-white/20 py-7 text-xs text-white/85 sm:flex-row sm:items-center">
           <p>{SITE_CONFIG.copyright}</p>
-          <p>Funmedia — Full-Service Marketing Agency · Nepal</p>
+          <p>Funmedia — Full-Service Marketing Agency · Kathmandu &amp; Pokhara</p>
           <div className="flex gap-6">
             <Link to="/about" className="hover:underline">
               Agency Philosophy
