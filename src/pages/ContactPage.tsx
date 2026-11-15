@@ -1,9 +1,14 @@
 import { useState, type FormEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { AlertCircle, ArrowUpRight, CheckCircle2, Mail, MapPin } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { AlertCircle, ArrowUpRight, CheckCircle2, Mail, MapPin, MessageCircle } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
+import { Breadcrumbs } from '../components/Breadcrumbs';
+import { Reveal } from '../components/Reveal';
 import { SERVICES } from '../data/services';
 import { SITE_CONFIG } from '../data/site';
+import { buildBreadcrumbSchema, getCanonicalUrl } from '../utils/seo';
+import { trackEvent } from '../utils/analytics';
+import { buildEnquiryWhatsAppUrl, getWhatsAppUrl } from '../utils/whatsapp';
 
 interface FormValues {
   fullName: string;
@@ -46,6 +51,7 @@ export function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
+  const [submittedWhatsAppUrl, setSubmittedWhatsAppUrl] = useState<string>(getWhatsAppUrl());
 
   function validateClient(form: FormValues): FieldErrors {
     const errors: FieldErrors = {};
@@ -117,7 +123,19 @@ export function ContactPage() {
         return;
       }
 
-      setSubmittedRef(data.referenceId || 'RECEIVED');
+      const refId = data.referenceId || 'RECEIVED';
+      setSubmittedWhatsAppUrl(
+        buildEnquiryWhatsAppUrl({
+          ...values,
+          referenceId: refId,
+        }),
+      );
+      trackEvent('generate_lead', {
+        source: 'contact_page',
+        service: values.serviceRequired,
+        budget: values.budget,
+      });
+      setSubmittedRef(refId);
       setValues({
         fullName: '',
         companyName: '',
@@ -130,7 +148,7 @@ export function ContactPage() {
       setFieldErrors({});
     } catch {
       setServerError(
-        `Network error while sending your enquiry. Please try again or email ${SITE_CONFIG.email}.`,
+        `Network error while sending your enquiry. Please send directly on WhatsApp (${SITE_CONFIG.whatsappDisplay}) or email ${SITE_CONFIG.email}.`,
       );
     } finally {
       setSubmitting(false);
@@ -140,70 +158,120 @@ export function ContactPage() {
   const inputBase =
     'mt-2 w-full rounded-xl border bg-white px-4 py-3 text-sm text-[#090909] placeholder:text-zinc-400 transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF4F17]';
 
+  const breadcrumbs = [
+    { label: 'Home', path: '/' },
+    { label: 'Contact', path: '/contact' },
+  ];
+
+  const contactSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact Funmedia',
+    url: getCanonicalUrl('/contact'),
+    mainEntity: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.brandName,
+      email: SITE_CONFIG.email,
+      telephone: SITE_CONFIG.telephone,
+      url: SITE_CONFIG.websiteUrl,
+    },
+  };
+
   return (
     <>
       <SEOHead
-        title="Contact Us | Funmedia — Marketing Agency Nepal"
-        description="Start a project with Funmedia in Nepal. Enquire about brand strategy, social media management, content creation, digital ads, or event marketing."
-        keywords="Contact Marketing Agency Nepal, Hire Creative Agency Kathmandu, Funmedia Nepal Contact"
+        title="Contact Funmedia | Marketing Agency in Pokhara & Kathmandu"
+        description="Talk to Funmedia in Pokhara or Kathmandu. Discuss your digital marketing, social media, video production, advertising, branding, or website project in Nepal."
+        keywords="Contact Marketing Agency Nepal, Hire Creative Agency Kathmandu, Marketing Agency Pokhara Contact"
+        canonicalPath="/contact"
+        schema={[contactSchema, buildBreadcrumbSchema(breadcrumbs)]}
       />
 
       <section className="bg-[#090909] pt-28 pb-16 text-white sm:pt-32 lg:pt-36 lg:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
               <span className="text-xs font-bold tracking-[0.2em] text-[#FF4F17] uppercase">
-                START A CONVERSATION
+                TALK TO OUR TEAM
               </span>
               <h1 className="font-display mt-3 text-4xl leading-[1.02] font-extrabold tracking-tight text-white uppercase sm:text-5xl">
-                Let&apos;s Build Something Together.
+                Let&apos;s Grow Your Brand Together.
               </h1>
               <p className="mt-4 text-base leading-relaxed text-white/75">
-                Tell us about your brand, upcoming launch, or marketing goals. Our team in Nepal will review your brief and follow up with clear next steps.
+                Tell us about your brand, upcoming launch, or marketing goals. Our teams in Kathmandu and Pokhara will review your brief and respond with clear next steps.
               </p>
 
-              <div className="mt-8 space-y-5 rounded-[24px] border border-white/15 bg-[#121214] p-7 text-white">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
-                    <Mail className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
-                      Email
+              <Reveal delay={0.06}>
+                <div className="mt-8 space-y-5 rounded-[24px] border border-white/15 bg-[#121214] p-7 text-white">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
+                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
                     </div>
-                    <a
-                      href={`mailto:${SITE_CONFIG.email}`}
-                      className="mt-1 block text-base font-semibold text-white transition-colors hover:text-[#FF4F17]"
-                    >
-                      {SITE_CONFIG.email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 border-t border-white/15 pt-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
-                    <MapPin className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
-                      Office Locations
-                    </div>
-                    {SITE_CONFIG.offices.map((office) => (
-                      <div key={office.city}>
-                        <div className="text-xs font-bold tracking-wider text-[#FF4F17] uppercase">
-                          {office.city}
-                        </div>
-                        <div className="mt-0.5 text-base font-semibold text-white">
-                          {office.address}
-                        </div>
+                    <div>
+                      <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                        WhatsApp Enquiry
                       </div>
-                    ))}
+                      <a
+                        href={getWhatsAppUrl(
+                          preselectedService
+                            ? `Hello Funmedia, I would like to enquire about ${preselectedService}.`
+                            : undefined,
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent('whatsapp_click', { source: 'contact_page' })}
+                        className="mt-1 inline-flex items-center gap-1.5 text-base font-semibold text-white transition-colors hover:text-[#FF4F17]"
+                      >
+                        <span>{SITE_CONFIG.whatsappDisplay}</span>
+                        <ArrowUpRight className="h-4 w-4 text-[#FF4F17]" aria-hidden="true" />
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 border-t border-white/15 pt-5">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
+                      <Mail className="h-4 w-4" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                        Email
+                      </div>
+                      <a
+                        href={`mailto:${SITE_CONFIG.email}`}
+                        onClick={() => trackEvent('email_click', { source: 'contact_page' })}
+                        className="mt-1 block text-base font-semibold text-white transition-colors hover:text-[#FF4F17]"
+                      >
+                        {SITE_CONFIG.email}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 border-t border-white/15 pt-5">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF4F17] text-white">
+                      <MapPin className="h-4 w-4" aria-hidden="true" />
+                    </div>
+                    <div className="space-y-3">
+                      <div className="text-xs font-semibold tracking-wider text-white/60 uppercase">
+                        Office Locations
+                      </div>
+                      {SITE_CONFIG.offices.map((office) => (
+                        <Link key={office.city} to={`/${office.slug}`} className="block group">
+                          <div className="text-xs font-bold tracking-wider text-[#FF4F17] uppercase">
+                            {office.city}
+                          </div>
+                          <div className="mt-0.5 text-base font-semibold text-white group-hover:underline">
+                            {office.address}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Reveal>
             </div>
 
-            <div className="lg:col-span-7">
+            <Reveal delay={0.1} className="lg:col-span-7">
               <div className="rounded-[28px] bg-white p-6 text-[#090909] shadow-2xl sm:p-9">
                 {submittedRef ? (
                   <div
@@ -224,15 +292,27 @@ export function ContactPage() {
                           <span className="font-mono font-bold text-[#FF4F17]">
                             {submittedRef}
                           </span>
-                          . Our team will review your project details and reply via email.
+                          . Continue on WhatsApp to connect directly with our team right away.
                         </p>
-                        <button
-                          type="button"
-                          onClick={() => setSubmittedRef(null)}
-                          className="mt-6 inline-flex min-h-[44px] items-center rounded-full bg-[#FF4F17] px-6 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#e54310]"
-                        >
-                          Submit Another Enquiry
-                        </button>
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                          <a
+                            href={submittedWhatsAppUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => trackEvent('whatsapp_click', { source: 'contact_page_confirmation' })}
+                            className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#FF4F17] px-6 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#e54310]"
+                          >
+                            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                            <span>Continue on WhatsApp ({SITE_CONFIG.whatsappDisplay})</span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => setSubmittedRef(null)}
+                            className="inline-flex min-h-[44px] items-center rounded-full border border-black/15 bg-white px-6 py-2.5 text-xs font-bold text-[#090909] transition-colors hover:border-[#FF4F17] hover:text-[#FF4F17]"
+                          >
+                            Submit Another Enquiry
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -467,22 +547,35 @@ export function ContactPage() {
                       )}
                     </div>
 
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="group inline-flex items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      <span className="rounded-full bg-[#FF4F17] px-7 py-3.5 text-xs font-bold tracking-wider text-white uppercase transition-colors group-hover:bg-[#e54310]">
-                        {submitting ? 'Sending Enquiry...' : 'Send Project Enquiry'}
-                      </span>
-                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform group-hover:translate-x-0.5 group-hover:bg-[#e54310]">
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                    </button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="group inline-flex items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        <span className="rounded-full bg-[#FF4F17] px-7 py-3.5 text-xs font-bold tracking-wider text-white uppercase transition-colors group-hover:bg-[#e54310]">
+                          {submitting ? 'Sending Enquiry...' : 'Send Project Enquiry'}
+                        </span>
+                        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform group-hover:translate-x-0.5 group-hover:bg-[#e54310]">
+                          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                      </button>
+
+                      <a
+                        href={buildEnquiryWhatsAppUrl(values)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent('whatsapp_click', { source: 'contact_page_direct' })}
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-black/15 bg-[#F3F4F6] px-5 py-3 text-xs font-bold text-[#090909] transition-colors hover:border-[#FF4F17] hover:text-[#FF4F17]"
+                      >
+                        <MessageCircle className="h-4 w-4 text-[#FF4F17]" aria-hidden="true" />
+                        <span>Send via WhatsApp ({SITE_CONFIG.whatsappDisplay})</span>
+                      </a>
+                    </div>
                   </form>
                 )}
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -138,7 +138,7 @@ async function sendEnquiryEmail(record: StoredEnquiry): Promise<boolean> {
 
   const html = `
     <div style="font-family: Arial, sans-serif; background:#090909; color:#ffffff; padding:24px;">
-      <h2 style="color:#FF7417; margin:0 0 12px;">New Funmedia Project Enquiry (${escapeHtml(record.referenceId)})</h2>
+      <h2 style="color:#FF4F17; margin:0 0 12px;">New Funmedia Project Enquiry (${escapeHtml(record.referenceId)})</h2>
       <p style="color:#B5B5B5; margin:0 0 20px;">Submitted on ${escapeHtml(record.submittedAt)}</p>
       <table style="width:100%; border-collapse:collapse; max-width:640px;">
         <tr><td style="padding:8px 0; color:#B5B5B5;">Full Name</td><td style="padding:8px 0;">${escapeHtml(record.fullName)}</td></tr>
@@ -149,7 +149,7 @@ async function sendEnquiryEmail(record: StoredEnquiry): Promise<boolean> {
         <tr><td style="padding:8px 0; color:#B5B5B5;">Estimated Budget</td><td style="padding:8px 0;">${escapeHtml(record.budget)}</td></tr>
       </table>
       <div style="margin-top:20px; padding:16px; background:#151515; border:1px solid #262626;">
-        <strong style="color:#FF7417; display:block; margin-bottom:8px;">Project Description</strong>
+        <strong style="color:#FF4F17; display:block; margin-bottom:8px;">Project Description</strong>
         <p style="margin:0; white-space:pre-wrap; line-height:1.6;">${escapeHtml(record.projectDescription)}</p>
       </div>
     </div>
@@ -170,6 +170,12 @@ async function sendEnquiryEmail(record: StoredEnquiry): Promise<boolean> {
 async function startServer() {
   const app = express();
   app.use(express.json({ limit: '1mb' }));
+
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+  });
 
   app.get('/api/health', (_req: Request, res: Response) => {
     res.json({ ok: true, service: 'funmedia-web' });
@@ -225,6 +231,33 @@ async function startServer() {
     }
   });
 
+  const publicOrDistDir =
+    process.env.NODE_ENV === 'production'
+      ? path.resolve(process.cwd(), 'dist')
+      : path.resolve(process.cwd(), 'public');
+
+  app.get('/robots.txt', async (_req: Request, res: Response) => {
+    try {
+      const content = await fs.readFile(path.join(publicOrDistDir, 'robots.txt'), 'utf-8');
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(content);
+    } catch {
+      res.status(404).send('Not found');
+    }
+  });
+
+  app.get('/sitemap.xml', async (_req: Request, res: Response) => {
+    try {
+      const content = await fs.readFile(path.join(publicOrDistDir, 'sitemap.xml'), 'utf-8');
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(content);
+    } catch {
+      res.status(404).send('Not found');
+    }
+  });
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -233,6 +266,13 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distDir = path.resolve(process.cwd(), 'dist');
+    app.use(
+      '/assets',
+      express.static(path.join(distDir, 'assets'), {
+        maxAge: '365d',
+        immutable: true,
+      }),
+    );
     app.use(express.static(distDir, { maxAge: '7d' }));
     app.get('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(distDir, 'index.html'));

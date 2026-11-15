@@ -67,32 +67,9 @@ export function PortfolioCard({ project, horizontal = false }: PortfolioCardProp
   return (
     <Link
       to={`/work/${project.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[22px] bg-[#F3F4F6] p-3 ring-1 ring-black/8 transition-all duration-200 hover:-translate-y-1 hover:bg-white hover:shadow-lg focus-visible:outline-2 focus-visible:outline-[#FF4F17]"
+      className="group flex h-full flex-col overflow-hidden rounded-[22px] bg-[#F3F4F6] p-3 ring-1 ring-black/8 transition-all duration-200 hover:-translate-y-1 hover:bg-white hover:shadow-lg focus-visible:outline-2 focus-visible:outline-[#FF4F17]"
     >
-      <div className="relative flex aspect-[16/10] w-full flex-col justify-between overflow-hidden rounded-[16px] bg-[#090909] p-6 text-white">
-        <div className="flex items-center justify-between">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform duration-200 group-hover:scale-105">
-            <CategoryIcon name={project.iconKey} className="h-5 w-5 stroke-[2]" />
-          </span>
-          <span className="font-mono tabular-nums text-xs font-semibold text-white/55">
-            {project.number}
-          </span>
-        </div>
-
-        <div className="flex items-end justify-between gap-2">
-          <span className="text-xs font-semibold tracking-wider text-white uppercase">
-            {project.category}
-          </span>
-          {project.isVideoShowcase && (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#FF4F17]">
-              <Play className="h-3 w-3 fill-[#FF4F17] text-[#FF4F17]" aria-hidden="true" />
-              <span>Motion Reel</span>
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col justify-between px-2 pt-4 pb-2">
+      <div className="flex flex-1 flex-col justify-between p-2">
         <div>
           <div className="flex items-center justify-between gap-2 text-xs text-[#52525B]">
             <span>{project.industry}</span>

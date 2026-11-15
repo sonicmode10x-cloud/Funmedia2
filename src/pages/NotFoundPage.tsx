@@ -7,7 +7,8 @@ export function NotFoundPage() {
     <>
       <SEOHead
         title="Page Not Found | Funmedia"
-        description="The page you requested could not be found. Return to Funmedia — Full-Service Marketing Agency in Nepal."
+        description="The page you requested could not be found. Return to Funmedia — Full-Service Creative and Digital Marketing Agency in Nepal."
+        noindex
       />
 
       <section className="flex min-h-[75vh] items-center bg-[#090909] pt-28 pb-20 text-white">
@@ -17,7 +18,7 @@ export function NotFoundPage() {
             This Page Is Off the Set.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-white/75">
-            The URL you visited does not exist or may have moved. Head back to the main showcase or explore our services.
+            The URL you visited does not exist or may have moved. Head back to the main showcase, explore our services, or browse our marketing guides.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
@@ -27,6 +28,12 @@ export function NotFoundPage() {
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               <span>Back to Home</span>
+            </Link>
+            <Link
+              to="/services"
+              className="inline-flex min-h-[46px] items-center rounded-full border border-white/25 bg-white/10 px-6 py-3 text-xs font-bold tracking-wider text-white uppercase transition-colors hover:bg-white hover:text-[#090909]"
+            >
+              View Services
             </Link>
             <Link
               to="/work"

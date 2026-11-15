@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Layers, Menu, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { NAV_ITEMS } from '../data/site';
+import { NAV_ITEMS, SITE_CONFIG } from '../data/site';
+import { trackEvent } from '../utils/analytics';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -66,7 +68,7 @@ export function Navbar() {
           {/* Zone 2: Centered Clean Single-Line Nav Links */}
           <nav
             aria-label="Primary Navigation"
-            className="hidden items-center gap-7 lg:flex"
+            className="hidden items-center gap-5 lg:flex xl:gap-7"
           >
             {NAV_ITEMS.map((item) => {
               const active = isActive(item.path);
@@ -92,13 +94,16 @@ export function Navbar() {
 
           {/* Zone 3: Right Single Action Link matching Finguard "Sign up ↗" */}
           <div className="flex items-center gap-3 shrink-0">
-            <Link
-              to="/contact"
+            <a
+              href={getWhatsAppUrl("Hello Funmedia, I'd like to discuss a project.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('whatsapp_click', { location: 'navbar_desktop' })}
               className="hidden items-center gap-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 transition-colors hover:text-[#FF4F17] sm:inline-flex"
             >
               <span>Let&apos;s Talk</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-[#FF4F17]" aria-hidden="true" />
-            </Link>
+            </a>
 
             <button
               type="button"
@@ -146,14 +151,17 @@ export function Navbar() {
             </nav>
 
             <div className="mt-8 border-t border-white/10 pt-6">
-              <Link
-                to="/contact"
+              <a
+                href={getWhatsAppUrl("Hello Funmedia, I'd like to discuss a project.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent('whatsapp_click', { location: 'navbar_mobile' })}
                 className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#FF4F17] px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-[#e54310]"
               >
-                Let&apos;s Talk
-              </Link>
+                Let&apos;s Talk on WhatsApp ({SITE_CONFIG.whatsappDisplay})
+              </a>
               <p className="mt-4 text-center text-xs text-white/60">
-                hello@funmedia.com.np · Kathmandu &amp; Pokhara, Nepal
+                {SITE_CONFIG.whatsappDisplay} · {SITE_CONFIG.email} · Kathmandu &amp; Pokhara
               </p>
             </div>
           </motion.div>

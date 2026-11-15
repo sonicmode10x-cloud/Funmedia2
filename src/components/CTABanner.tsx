@@ -6,10 +6,13 @@ import {
   CheckCircle2,
   Mail,
   MapPin,
+  MessageCircle,
   Sparkles,
 } from 'lucide-react';
 import { SERVICES } from '../data/services';
 import { SITE_CONFIG } from '../data/site';
+import { trackEvent } from '../utils/analytics';
+import { buildEnquiryWhatsAppUrl, getWhatsAppUrl } from '../utils/whatsapp';
 import { Reveal } from './Reveal';
 
 interface CTABannerProps {
@@ -26,8 +29,8 @@ const BUDGET_OPTIONS = [
 ];
 
 export function CTABanner({
-  headline = "Let's Connect",
-  subtext = "Ready to make your brand stand out? Tell us about your goals and let's create something people remember.",
+  headline = "Let's Grow Your Brand",
+  subtext = 'Ready to make your brand impossible to ignore? Tell us about your goals in Pokhara, Kathmandu, or across Nepal.',
 }: CTABannerProps) {
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -39,6 +42,7 @@ export function CTABanner({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [referenceId, setReferenceId] = useState<string | null>(null);
+  const [submittedWhatsAppUrl, setSubmittedWhatsAppUrl] = useState<string>(getWhatsAppUrl());
 
   async function handleQuickSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -77,14 +81,34 @@ export function CTABanner({
         setErrorMsg(data.message || 'Please check your input and try again.');
         return;
       }
-      setReferenceId(data.referenceId || 'RECEIVED');
+      const refId = data.referenceId || 'RECEIVED';
+      setSubmittedWhatsAppUrl(
+        buildEnquiryWhatsAppUrl({
+          fullName,
+          companyName,
+          email,
+          phone,
+          serviceRequired,
+          budget,
+          projectDescription,
+          referenceId: refId,
+        }),
+      );
+      trackEvent('generate_lead', {
+        source: 'cta_banner',
+        service: serviceRequired,
+        budget,
+      });
+      setReferenceId(refId);
       setFullName('');
       setCompanyName('');
       setEmail('');
       setPhone('');
       setProjectDescription('');
     } catch {
-      setErrorMsg(`Unable to submit right now. Email ${SITE_CONFIG.email} directly.`);
+      setErrorMsg(
+        `Unable to submit right now. Message us on WhatsApp (${SITE_CONFIG.whatsappDisplay}) or email ${SITE_CONFIG.email}.`,
+      );
     } finally {
       setSubmitting(false);
     }
@@ -116,15 +140,27 @@ export function CTABanner({
                         Project Enquiry Logged ({referenceId})
                       </h3>
                       <p className="mt-1 text-xs leading-relaxed text-[#52525B]">
-                        Thank you. Our team at Funmedia Nepal will review your brief and reply shortly.
+                        Thank you. Send your brief straight to our team on WhatsApp for the fastest response.
                       </p>
-                      <button
-                        type="button"
-                        onClick={() => setReferenceId(null)}
-                        className="mt-4 rounded-full bg-[#FF4F17] px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#e54310]"
-                      >
-                        Send another enquiry
-                      </button>
+                      <div className="mt-4 flex flex-wrap items-center gap-3">
+                        <a
+                          href={submittedWhatsAppUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => trackEvent('whatsapp_click', { source: 'cta_banner_confirmation' })}
+                          className="inline-flex items-center gap-2 rounded-full bg-[#FF4F17] px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#e54310]"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>Send on WhatsApp ({SITE_CONFIG.whatsappDisplay})</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => setReferenceId(null)}
+                          className="rounded-full border border-black/15 bg-white px-5 py-2.5 text-xs font-bold text-[#090909] transition-colors hover:border-[#FF4F17] hover:text-[#FF4F17]"
+                        >
+                          Send another enquiry
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -252,18 +288,39 @@ export function CTABanner({
                   </div>
 
                   <div className="flex flex-wrap items-center justify-between gap-4 pt-3">
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="group inline-flex items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[#FF4F17] disabled:opacity-60"
-                    >
-                      <span className="rounded-full bg-[#FF4F17] px-6 py-3 text-xs font-bold tracking-wider text-white uppercase transition-colors group-hover:bg-[#e54310]">
-                        {submitting ? 'Sending...' : 'Start a Project'}
-                      </span>
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform duration-150 group-hover:translate-x-0.5 group-hover:bg-[#e54310]">
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                    </button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="group inline-flex items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[#FF4F17] disabled:opacity-60"
+                      >
+                        <span className="rounded-full bg-[#FF4F17] px-6 py-3 text-xs font-bold tracking-wider text-white uppercase transition-colors group-hover:bg-[#e54310]">
+                          {submitting ? 'Sending...' : 'Start a Project'}
+                        </span>
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform duration-150 group-hover:translate-x-0.5 group-hover:bg-[#e54310]">
+                          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                      </button>
+
+                      <a
+                        href={buildEnquiryWhatsAppUrl({
+                          fullName,
+                          companyName,
+                          email,
+                          phone,
+                          serviceRequired,
+                          budget,
+                          projectDescription,
+                        })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent('whatsapp_click', { source: 'cta_banner_direct' })}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-black/15 bg-[#F3F4F6] px-4 py-3 text-xs font-bold text-[#090909] transition-colors hover:border-[#FF4F17] hover:text-[#FF4F17]"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5 text-[#FF4F17]" aria-hidden="true" />
+                        <span>WhatsApp Brief</span>
+                      </a>
+                    </div>
 
                     <Link
                       to="/contact"
@@ -293,10 +350,25 @@ export function CTABanner({
               <div className="space-y-4 border-t border-white/15 pt-6 text-sm">
                 <div className="flex items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FF4F17]/20 text-[#FF4F17]">
+                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <a
+                    href={getWhatsAppUrl(`Hello Funmedia, I would like to enquire about ${serviceRequired}.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent('whatsapp_click', { source: 'cta_banner_card' })}
+                    className="font-semibold text-white hover:text-[#FF4F17]"
+                  >
+                    WhatsApp: {SITE_CONFIG.whatsappDisplay}
+                  </a>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FF4F17]/20 text-[#FF4F17]">
                     <Mail className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <a
                     href={`mailto:${SITE_CONFIG.email}`}
+                    onClick={() => trackEvent('email_click', { source: 'cta_banner_card' })}
                     className="font-medium text-white hover:text-[#FF4F17]"
                   >
                     {SITE_CONFIG.email}

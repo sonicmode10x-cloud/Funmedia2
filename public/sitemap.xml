@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.funmedianp.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://www.funmedianp.com/about</loc><priority>0.8</priority></url>
+  <url><loc>https://www.funmedianp.com/services</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/work</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/industries</loc><priority>0.8</priority></url>
+  <url><loc>https://www.funmedianp.com/blog</loc><priority>0.8</priority></url>
+  <url><loc>https://www.funmedianp.com/contact</loc><priority>0.9</priority></url>
+
+  <!-- Dedicated Local SEO Pages -->
+  <url><loc>https://www.funmedianp.com/digital-marketing-agency-pokhara</loc><priority>0.95</priority></url>
+  <url><loc>https://www.funmedianp.com/digital-marketing-agency-kathmandu</loc><priority>0.95</priority></url>
+
+  <!-- Dedicated Commercial Service SEO Pages -->
+  <url><loc>https://www.funmedianp.com/digital-marketing-agency-nepal</loc><priority>0.95</priority></url>
+  <url><loc>https://www.funmedianp.com/social-media-marketing</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/content-creation</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/video-production</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/influencer-marketing</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/digital-advertising</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/google-ads</loc><priority>0.85</priority></url>
+  <url><loc>https://www.funmedianp.com/meta-ads</loc><priority>0.85</priority></url>
+  <url><loc>https://www.funmedianp.com/website-development</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/branding-and-creative-design</loc><priority>0.9</priority></url>
+  <url><loc>https://www.funmedianp.com/photography-and-videography</loc><priority>0.85</priority></url>
+  <url><loc>https://www.funmedianp.com/event-marketing</loc><priority>0.85</priority></url>
+
+  <!-- Verified Portfolio & Case Studies -->
+  <url><loc>https://www.funmedianp.com/work/club-nova</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/club-xo</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/right-to-protein-run</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/tvs-motors</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/31-park-hotel</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/baneshwor-hills</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/us-soybean-export-council</loc><priority>0.75</priority></url>
+  <url><loc>https://www.funmedianp.com/work/bagaicha-resort-and-spa</loc><priority>0.75</priority></url>
+
+  <!-- SEO Blog Articles -->
+  <url><loc>https://www.funmedianp.com/blog/how-to-choose-the-best-digital-marketing-agency-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/why-every-business-in-nepal-needs-a-digital-marketing-strategy</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-much-does-digital-marketing-cost-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/influencer-marketing-in-nepal-guide-for-businesses</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-to-find-the-right-influencers-for-your-brand-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/why-short-form-video-is-important-for-businesses</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-much-does-professional-video-production-cost-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/social-media-marketing-strategies-for-restaurants-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/digital-marketing-for-hotels-and-resorts-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-to-advertise-on-facebook-and-instagram-in-nepal</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/google-ads-vs-meta-ads-which-is-better-for-nepali-businesses</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/why-your-business-needs-a-professional-website</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/content-marketing-strategies-for-businesses-in-pokhara</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-kathmandu-businesses-can-build-a-strong-online-presence</loc><priority>0.7</priority></url>
+  <url><loc>https://www.funmedianp.com/blog/how-to-build-a-strong-brand-identity-in-nepal</loc><priority>0.7</priority></url>
+</urlset>

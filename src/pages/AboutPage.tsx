@@ -1,23 +1,35 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Asterisk, Compass, Layers, Sparkles } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Reveal } from '../components/Reveal';
 import { CTABanner } from '../components/CTABanner';
 import { INDUSTRIES } from '../data/industries';
 import { WHY_FUNMEDIA_STRENGTHS } from '../data/site';
+import { buildBreadcrumbSchema } from '../utils/seo';
+import { trackEvent } from '../utils/analytics';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export function AboutPage() {
+  const breadcrumbs = [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+  ];
+
   return (
     <>
       <SEOHead
-        title="About Us | Funmedia — Creative Marketing Agency Nepal"
-        description="Learn about Funmedia, a full-service marketing agency in Nepal uniting brand strategy, content creation, digital advertising, and live event execution."
-        keywords="Creative Agency Nepal, Marketing Agency Kathmandu, About Funmedia Nepal"
+        title="About Funmedia | Creative & Digital Marketing Agency Nepal"
+        description="Learn about Funmedia, a creative and digital marketing agency in Pokhara and Kathmandu uniting strategy, content production, ads, branding, and websites."
+        keywords="Creative Agency Nepal, Marketing Agency Kathmandu, Marketing Agency Pokhara, About Funmedia Nepal"
+        canonicalPath="/about"
+        schema={buildBreadcrumbSchema(breadcrumbs)}
       />
 
       {/* Dark Architectural Hero Header matching Finguard Hero Band */}
       <section className="bg-[#090909] pt-28 pb-16 text-white sm:pt-32 lg:pt-36 lg:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
           <div className="grid items-stretch gap-10 lg:grid-cols-12 lg:gap-14">
             <div className="flex flex-col justify-center lg:col-span-7">
               <span className="text-xs font-bold tracking-[0.2em] text-[#FF4F17] uppercase">
@@ -30,18 +42,24 @@ export function AboutPage() {
                 Funmedia is a full-service creative and digital marketing agency based in Nepal. We partner with ambitious businesses across hospitality, nightlife, entertainment, travel, and consumer lifestyle to turn attention into lasting brand equity.
               </p>
               <div className="mt-8">
-                <Link to="/contact" className="group inline-flex items-center gap-1.5">
+                <a
+                  href={getWhatsAppUrl("Hello Funmedia, I would like to start a project.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('whatsapp_click', { source: 'about_hero' })}
+                  className="group inline-flex items-center gap-1.5"
+                >
                   <span className="rounded-full bg-[#FF4F17] px-6 py-3.5 text-xs font-bold tracking-wider text-white uppercase transition-colors group-hover:bg-[#e54310]">
                     Start a Project
                   </span>
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FF4F17] text-white transition-transform group-hover:translate-x-0.5 group-hover:bg-[#e54310]">
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </span>
-                </Link>
+                </a>
               </div>
             </div>
 
-            <div className="lg:col-span-5">
+            <Reveal delay={0.08} className="lg:col-span-5">
               <div className="flex h-full flex-col justify-between rounded-[28px] bg-gradient-to-br from-[#FF632B] via-[#FF4F17] to-[#D63708] p-8 text-white shadow-[0_24px_55px_rgba(255,79,23,0.28)]">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#FF4F17]">
                   <Asterisk className="h-6 w-6 stroke-[2.5]" aria-hidden="true" />
@@ -55,7 +73,7 @@ export function AboutPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

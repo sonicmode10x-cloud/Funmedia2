@@ -1,25 +1,47 @@
 import {
   Building2,
+  Camera,
   Clapperboard,
   Compass,
   Disc3,
+  Globe,
   Layers,
   Megaphone,
   Mountain,
   Music,
   Palette,
+  Search,
   Share2,
   ShoppingBag,
   Sparkles,
+  Target,
   Ticket,
   Users,
   Utensils,
+  Video,
 } from 'lucide-react';
-import type { ServiceIconKey } from '../data/services';
-import type { ProjectIconKey } from '../data/projects';
-import type { IndustryIconKey } from '../data/industries';
 
-type AnyIconKey = ServiceIconKey | ProjectIconKey | IndustryIconKey;
+export type AnyIconKey =
+  | 'compass'
+  | 'share'
+  | 'clapperboard'
+  | 'sparkles'
+  | 'users'
+  | 'palette'
+  | 'megaphone'
+  | 'layers'
+  | 'music'
+  | 'utensils'
+  | 'mountain'
+  | 'disc'
+  | 'building'
+  | 'ticket'
+  | 'shoppingBag'
+  | 'globe'
+  | 'video'
+  | 'camera'
+  | 'search'
+  | 'target';
 
 const ICON_MAP = {
   compass: Compass,
@@ -37,6 +59,11 @@ const ICON_MAP = {
   building: Building2,
   ticket: Ticket,
   shoppingBag: ShoppingBag,
+  globe: Globe,
+  video: Video,
+  camera: Camera,
+  search: Search,
+  target: Target,
 } as const;
 
 interface CategoryIconProps {

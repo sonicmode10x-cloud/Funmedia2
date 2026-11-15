@@ -1,22 +1,34 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Reveal } from '../components/Reveal';
 import { CTABanner } from '../components/CTABanner';
 import { CategoryIcon } from '../components/CategoryIcon';
 import { INDUSTRIES } from '../data/industries';
+import { buildBreadcrumbSchema } from '../utils/seo';
+import { trackEvent } from '../utils/analytics';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export function IndustriesPage() {
+  const breadcrumbs = [
+    { label: 'Home', path: '/' },
+    { label: 'Industries', path: '/industries' },
+  ];
+
   return (
     <>
       <SEOHead
-        title="Industries We Serve | Funmedia — Marketing Agency Nepal"
-        description="Funmedia partners with clubs and nightlife venues, restaurants, hotels, event organizers, travel brands, and lifestyle companies across Nepal."
-        keywords="Hospitality Marketing Nepal, Nightlife Marketing Kathmandu, Event Promotion Nepal, Travel Marketing Agency Nepal"
+        title="Industries We Serve in Nepal | Funmedia"
+        description="Funmedia partners with clubs and nightlife venues, restaurants, hotels, event organizers, travel brands, and lifestyle companies across Pokhara, Kathmandu, and Nepal."
+        keywords="Hospitality Marketing Nepal, Nightlife Marketing Kathmandu, Restaurant Marketing Pokhara, Event Promotion Nepal, Travel Marketing Agency Nepal"
+        canonicalPath="/industries"
+        schema={buildBreadcrumbSchema(breadcrumbs)}
       />
 
       <section className="bg-[#090909] pt-28 pb-14 text-white sm:pt-32 lg:pt-36 lg:pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
           <span className="text-xs font-bold tracking-[0.2em] text-[#FF4F17] uppercase">
             INDUSTRY EXPERTISE
           </span>
@@ -68,13 +80,18 @@ export function IndustriesPage() {
                 </div>
 
                 <div className="mt-8 border-t border-black/10 pt-5">
-                  <Link
-                    to="/contact"
+                  <a
+                    href={getWhatsAppUrl(
+                      `Hello Funmedia, I would like to discuss a campaign for ${industry.title}.`,
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent('whatsapp_click', { source: 'industries', industry: industry.slug })}
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-[#090909] hover:text-[#FF4F17]"
                   >
                     <span>Discuss a campaign</span>
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
+                  </a>
                 </div>
               </article>
             </Reveal>

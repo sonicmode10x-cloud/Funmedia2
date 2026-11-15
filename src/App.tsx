@@ -1,17 +1,28 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { LogoIntro } from './components/LogoIntro';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { ServicesPage } from './pages/ServicesPage';
-import { ServiceDetailPage } from './pages/ServiceDetailPage';
-import { WorkPage } from './pages/WorkPage';
-import { ProjectDetailPage } from './pages/ProjectDetailPage';
-import { IndustriesPage } from './pages/IndustriesPage';
-import { ContactPage } from './pages/ContactPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { SERVICES } from './data/services';
+
+const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })));
+const ServicesPage = lazy(() => import('./pages/ServicesPage').then((m) => ({ default: m.ServicesPage })));
+const ServiceDetailPage = lazy(() =>
+  import('./pages/ServiceDetailPage').then((m) => ({ default: m.ServiceDetailPage })),
+);
+const LocationPage = lazy(() => import('./pages/LocationPage').then((m) => ({ default: m.LocationPage })));
+const WorkPage = lazy(() => import('./pages/WorkPage').then((m) => ({ default: m.WorkPage })));
+const ProjectDetailPage = lazy(() =>
+  import('./pages/ProjectDetailPage').then((m) => ({ default: m.ProjectDetailPage })),
+);
+const IndustriesPage = lazy(() =>
+  import('./pages/IndustriesPage').then((m) => ({ default: m.IndustriesPage })),
+);
+const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then((m) => ({ default: m.ContactPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,17 +42,45 @@ export default function App() {
       <div className="flex min-h-screen flex-col bg-white text-[#090909]">
         <Navbar />
         <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/services/:slug" element={<ServiceDetailPage />} />
-            <Route path="/work" element={<WorkPage />} />
-            <Route path="/work/:slug" element={<ProjectDetailPage />} />
-            <Route path="/industries" element={<IndustriesPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <div className="min-h-[60vh] bg-white pt-28 text-center text-xs font-semibold text-[#52525B]">
+                Loading...
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/services/:slug" element={<ServiceDetailPage />} />
+
+              {SERVICES.map((svc) => (
+                <Route
+                  key={svc.slug}
+                  path={`/${svc.slug}`}
+                  element={<ServiceDetailPage forcedSlug={svc.slug} />}
+                />
+              ))}
+
+              <Route
+                path="/digital-marketing-agency-pokhara"
+                element={<LocationPage cityKey="pokhara" />}
+              />
+              <Route
+                path="/digital-marketing-agency-kathmandu"
+                element={<LocationPage cityKey="kathmandu" />}
+              />
+
+              <Route path="/work" element={<WorkPage />} />
+              <Route path="/work/:slug" element={<ProjectDetailPage />} />
+              <Route path="/industries" element={<IndustriesPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>

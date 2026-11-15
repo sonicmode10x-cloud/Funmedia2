@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { SEOHead } from '../components/SEOHead';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Reveal } from '../components/Reveal';
 import { PortfolioCard } from '../components/PortfolioCard';
 import { CTABanner } from '../components/CTABanner';
 import { PROJECT_CATEGORIES, PROJECTS, type ProjectCategory } from '../data/projects';
+import { GALLERY_IMAGES } from '../data/gallery';
+import { buildBreadcrumbSchema } from '../utils/seo';
 
 export function WorkPage() {
   const [selectedCategory, setSelectedCategory] = useState<'All' | ProjectCategory>('All');
@@ -13,16 +16,24 @@ export function WorkPage() {
       ? PROJECTS
       : PROJECTS.filter((project) => project.category === selectedCategory);
 
+  const breadcrumbs = [
+    { label: 'Home', path: '/' },
+    { label: 'Our Work', path: '/work' },
+  ];
+
   return (
     <>
       <SEOHead
-        title="Our Work | Funmedia — Creative Portfolio & Case Studies Nepal"
-        description="Browse Funmedia's creative portfolio across nightlife, hospitality, live events, brand campaigns, influencer marketing, and commercial content production in Nepal."
-        keywords="Marketing Portfolio Nepal, Video Production Nepal, Event Marketing Nepal, Brand Campaigns Kathmandu"
+        title="Client Portfolio & Case Studies in Nepal | Funmedia"
+        description="Explore Funmedia's portfolio featuring Club Nova, Club XO, TVS Motors, Bagaicha Resort and Spa, 31 Park Hotel, Baneshwor Hills, Right To Protein Run, and more."
+        keywords="Marketing Portfolio Nepal, Video Production Nepal, Event Marketing Nepal, Brand Campaigns Kathmandu, Pokhara Agency Work"
+        canonicalPath="/work"
+        schema={buildBreadcrumbSchema(breadcrumbs)}
       />
 
       <section className="bg-[#090909] pt-28 pb-14 text-white sm:pt-32 lg:pt-36 lg:pb-18">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
           <span className="text-xs font-bold tracking-[0.2em] text-[#FF4F17] uppercase">
             PORTFOLIO &amp; CASE STUDIES
           </span>
@@ -30,7 +41,7 @@ export function WorkPage() {
             Good Work Speaks Louder.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
-            Concept showcases and campaign architectures illustrating how Funmedia brings brand strategy, visual production, and digital execution together across Nepal.
+            Verified client campaigns across nightlife, hospitality, automotive, agribusiness, and public events across Nepal.
           </p>
 
           <div
@@ -75,6 +86,35 @@ export function WorkPage() {
           {filteredProjects.map((project, index) => (
             <Reveal key={project.slug} delay={Math.min(index * 0.05, 0.25)}>
               <PortfolioCard project={project} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl border-t border-black/8 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <Reveal>
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#090909] uppercase sm:text-4xl">
+            Gallery
+          </h2>
+        </Reveal>
+
+        <div className="mt-8 columns-2 gap-3.5 sm:gap-5">
+          {GALLERY_IMAGES.map((photo, index) => (
+            <Reveal
+              key={photo.src}
+              delay={(index % 2) * 0.06}
+              className="mb-3.5 break-inside-avoid sm:mb-5"
+            >
+              <div className="overflow-hidden rounded-[20px] bg-[#F3F4F6] ring-1 ring-black/6">
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  draggable={false}
+                  referrerPolicy="no-referrer"
+                  className="pointer-events-none block h-auto w-full select-none object-cover"
+                />
+              </div>
             </Reveal>
           ))}
         </div>
