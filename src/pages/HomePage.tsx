@@ -9,6 +9,7 @@ import {
   Layers,
   MapPin,
   Megaphone,
+  MessageCircle,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -135,6 +136,17 @@ export function HomePage() {
                     </span>
                   </a>
                 </div>
+
+                <a
+                  href={getWhatsAppUrl('Hello Funmedia, I would like to make an enquiry.')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('whatsapp_click', { location: 'hero_whatsapp_number' })}
+                  className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-white/80 transition-colors hover:text-[#FF4F17]"
+                >
+                  <MessageCircle className="h-4 w-4 text-[#25D366]" aria-hidden="true" />
+                  <span>WhatsApp Enquiries: {SITE_CONFIG.whatsappDisplay}</span>
+                </a>
               </div>
 
               <div className="border-t border-white/15 pt-6">
@@ -716,25 +728,18 @@ export function HomePage() {
             </h2>
           </Reveal>
 
-          <div className="mt-8 flex flex-col gap-4 sm:gap-5">
-            {[GALLERY_IMAGES.slice(0, 8), GALLERY_IMAGES.slice(8)].map((row, rowIndex) => (
-              <Reveal key={rowIndex} delay={rowIndex * 0.08}>
-                <div className="flex gap-3.5 overflow-x-auto pb-2 sm:gap-5">
-                  {row.map((photo) => (
-                    <div
-                      key={photo.src}
-                      className="h-52 shrink-0 overflow-hidden rounded-2xl bg-[#F3F4F6] sm:h-64 lg:h-72"
-                    >
-                      <img
-                        src={photo.src}
-                        alt={photo.alt}
-                        loading="lazy"
-                        draggable={false}
-                        referrerPolicy="no-referrer"
-                        className="pointer-events-none block h-full w-auto select-none object-cover"
-                      />
-                    </div>
-                  ))}
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            {GALLERY_IMAGES.map((photo, index) => (
+              <Reveal key={photo.src} delay={(index % 4) * 0.04}>
+                <div className="aspect-square overflow-hidden rounded-xl bg-[#F3F4F6]">
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    draggable={false}
+                    referrerPolicy="no-referrer"
+                    className="pointer-events-none block h-full w-full select-none object-cover"
+                  />
                 </div>
               </Reveal>
             ))}

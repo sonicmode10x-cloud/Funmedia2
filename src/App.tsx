@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { LogoIntro } from './components/LogoIntro';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { HomePage } from './pages/HomePage';
 import { SERVICES } from './data/services';
 
@@ -83,6 +84,7 @@ export default function App() {
           </Suspense>
         </main>
         <Footer />
+        <FloatingWhatsApp />
       </div>
     </BrowserRouter>
   );

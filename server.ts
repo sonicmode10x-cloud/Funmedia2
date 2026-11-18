@@ -226,7 +226,7 @@ async function startServer() {
       res.status(500).json({
         success: false,
         message:
-          'We could not submit your enquiry right now. Please try again or email hello@funmedia.com.np directly.',
+          'We could not submit your enquiry right now. Please message us on WhatsApp (+977 9810396265) or email hello@funmedia.com.np directly.',
       });
     }
   });

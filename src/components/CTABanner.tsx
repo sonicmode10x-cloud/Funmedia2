@@ -318,7 +318,7 @@ export function CTABanner({
                         className="inline-flex items-center gap-1.5 rounded-full border border-black/15 bg-[#F3F4F6] px-4 py-3 text-xs font-bold text-[#090909] transition-colors hover:border-[#FF4F17] hover:text-[#FF4F17]"
                       >
                         <MessageCircle className="h-3.5 w-3.5 text-[#FF4F17]" aria-hidden="true" />
-                        <span>WhatsApp Brief</span>
+                        <span>WhatsApp ({SITE_CONFIG.whatsappDisplay})</span>
                       </a>
                     </div>
 
